@@ -3,6 +3,7 @@
 #Guardian
 #########################
 library(GuardianR)
+library(stringr)
 
 key<-"cd31f5ae-cf20-47f6-b6e0-e80b027825ec"
 articles<-NULL
@@ -19,7 +20,27 @@ for(y in 1999:2016){
 
 articles_dupl<-duplicated(articles[,"id"])
 articles_unique<-articles[-which(articles_dupl=="TRUE"),]
+#some article bodies are missing, replace with NA
+articles_unique$body[which(articles_unique$body=="")]<-NA
+
+#remove everything that is not a letter or a number from the body of the articles
+articles_unique$body<- str_replace_all(articles_unique$body, "[^a-zA-Z\\s]", " ")
+
 write.table(articles_unique,"Guardian.txt",sep="\t",row.names=FALSE)
+guardian_all<-read.table("Guardian.txt",header=T,sep="\t")
+#Error in scan(file, what, nmax, sep, dec, quote, skip, nlines, na.strings,  : 
+#line 210 did not have 27 elements
+
+#subset to keep only columns we are interested in
+articles_sub<-articles_unique[,c(1,4,5,6,7,22,23,27)]
+
+#some article bodies are missing, replace with NA
+articles_sub$body[which(articles_sub$body=="")]<-NA
+
+#remove everything that is not a letter or a number from the body of the articles
+articles_sub$body<- str_replace_all(articles_sub$body, "[^a-zA-Z\\s]", " ")
+
+write.table(articles_sub,"Guardian_sub.txt",sep="\t",row.names=FALSE)
 
 #########################
 #NYTimes
