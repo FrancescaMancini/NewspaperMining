@@ -19,7 +19,7 @@ for(y in 1999:2016){
 
 articles_dupl<-duplicated(articles[,"id"])
 articles_unique<-articles[-which(articles_dupl=="TRUE"),]
-write.table(articles_unique,"Guardian.txt",sep="/t",row.names=FALSE)
+write.table(articles_unique,"Guardian.txt",sep="\t",row.names=FALSE)
 
 #########################
 #NYTimes
