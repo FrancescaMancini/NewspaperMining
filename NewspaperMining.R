@@ -50,22 +50,7 @@ resp <- GET(paste('https://api.nytimes.com/svc/search/v2/articlesearch.json?api-
 
 print(content(resp, 'parsed')$response$meta$hits)
 
-
-
-makeURL <- function(q=NULL, fq=NULL, begin_date=NULL, end_date=NULL, key=getOption("nyt_as_key"), page=0, 
-                    sort=NULL, fl=NULL, hl=NULL, facet_field=NULL, facet_filter=NULL){
-  arglist <- list(q=q, fq=fq, begin_date=begin_date, end_date=end_date, 'api-key'=key, page=page,
-                  sort=sort, fl=fl, hl=hl, facet_field=facet_field, facet_filter=facet_filter)
-  url <- 'http://api.nytimes.com/svc/search/v2/articlesearch.json?'
-  for(i in 1:length(arglist)){
-    if(is.null(unlist(arglist[i]))==F){
-      url <- paste0(url, '&', names(arglist[i]), '=', arglist[i])
-    }
-  }
-  return(url)
-}
-
-url1<-makeURL(q="conservation",begin_date="20010101",end_date="20020101",key=NYTkey)
+print(content(resp, 'parsed')$response$docs)
 
 
 getMeta <- function(url, pages=Inf, sleep=0.1, tryn=3) {
@@ -97,6 +82,6 @@ getMeta <- function(url, pages=Inf, sleep=0.1, tryn=3) {
 }
 
 
-
+getMeta()
 
 
