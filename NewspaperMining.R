@@ -46,9 +46,10 @@ write.table(articles_sub,"Guardian_sub.txt",sep="\t",row.names=FALSE)
 #NYTimes
 #########################
 library(httr)
-resp <- GET(paste("http://api.nytimes.com/svc/search/v2/articlesearch.json?q=conservation&facet_field=source&facet_filter=true&begin_date=20010101&end_date=20020101&api-key=",NYTkey,sep=""))
+resp <- GET(paste('https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=',NYTkey,'&fq=body:("conservation"AND"wildlife")&begin_date=20010101&end_date=20020101&facet_field=source&facet_filter=true',sep=""))
 
-print(content(resp, 'parsed')$response$facets)
+print(content(resp, 'parsed')$response$meta$hits)
+
 
 
 makeURL <- function(q=NULL, fq=NULL, begin_date=NULL, end_date=NULL, key=getOption("nyt_as_key"), page=0, 
