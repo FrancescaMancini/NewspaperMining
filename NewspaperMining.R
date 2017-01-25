@@ -157,15 +157,32 @@ write.table(URL_unique,"NYTurl.txt",row.names = F,sep="\t")  #save file
 NYTurl<-read.table("NYTurl.txt",stringsAsFactors = F, sep="\t",header=T)  #read the dataset
 
 
-
 #get article body
 #loop through urls
-for (i in 1:length(URLs$url)){
-  article<-GET(URLs$url[i])  #make the GET request
+for (i in 1:length(NYTurl$url)){
+  if (startsWith(NYTurl$url[i],"http")){ #some url are wrong or missing
+                                           #if url starts with http then...  
+  article<-GET(NYTurl$url[i])  #...make the GET request
   html<- content(article,"text")  #get the text
-  URLs[i,4]<-parseArticleBody(html) #parse the article body
+  NYTurl[i,4]<-parseArticleBody(html)}# parse the article body
+  else {NYTurl[i,4]<-NA} #if url does not start with http then it is wrong so assign NA
+  Sys.sleep(1)
 }
 
+
+NYT_articles<-NYTurl
+
+#some article bodies are missing, replace with NA
+NYT_articles$text[which(NYT_articles$text=="")]<-NA
+
+#remove everything that is not a letter or a number from the body of the articles
+NYT_articles$text<- str_replace_all(NYT_articles$text, "[^a-zA-Z\\s]", " ")
+
+#save file
+write.table(NYT_articles,"NYT_articles.txt",sep="\t",row.names=FALSE)
+
+#read dataset in
+NYT<-read.table("NYT_articles.txt",header=T,sep="\t")
 
 
 
